@@ -9,13 +9,15 @@ setup(
     description='An easy logging library.',
     url='https://github.com/BitNinja01/Zazzle',
     download_url='https://github.com/BitNinja01/zazzle/archive/refs/tags/0.1.0.tar.gz',
-    license='GNUv3',
+    license='GNU General Public License v3 (GPLv3)',
     classifiers=[
         'Programming Language :: Python :: 3.10',
-        'License :: OSI Approved :: GNUv3 License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
         'Development Status :: 3 - Alpha',
+        'Natural Language :: English',
+        'Topic :: System :: Logging'
     ],
     python_requires='>=3.8',
     zip_safe=True
