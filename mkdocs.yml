@@ -1,0 +1,16 @@
+site_name: Zazzle Documentation
+site_url: https://zazzle-docs/
+repo_url: https://github.com/BitNinja01/Zazzle
+repo_name: 'Github'
+site_description: 'Documentation for the Zazzle module for Python.'
+site_author: 'BitNinja01'
+copyright: ''
+
+nav:
+  - Installation: installation.md
+  - Quickstart: quickstart.md
+  - API Reference: api.md
+
+theme:
+  name: readthedocs
+  highlightjs: true
