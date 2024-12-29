@@ -333,10 +333,24 @@ class ZZ_Logging():
                 if gl_current_function_string == 0:
                     tracker_prefix = selected_trackers[0]
                     gl_current_function_string = 1
+
+                    # Print the name of the function before we start the next series of commands
+                    # String variables
+                    color = ZZ_Colors.fg.darkgrey
+                    reset = ZZ_Colors.reset
+                    flag_text = f"|{f'FUNCTION : {gl_current_function}'}|\t"
+
+                    # Print the level flag if enabled
+                    gl_last_message = f"{color}{tracker_prefix}{flag_text}{reset}"
+                    print(gl_last_message)
+
+                    # Write to the log file
+                    logging.info(log_message)
+
+                    tracker_prefix = selected_trackers[1]
+
                 elif gl_current_function_string == 1:
                     tracker_prefix = selected_trackers[1]
-                elif gl_current_function_string == 2:
-                    tracker_prefix = selected_trackers[2]
                 else:
                     tracker_prefix = selected_trackers[0]
 
