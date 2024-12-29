@@ -351,8 +351,6 @@ class ZZ_Logging():
 
                 elif gl_current_function_string == 1:
                     tracker_prefix = selected_trackers[1]
-                else:
-                    tracker_prefix = selected_trackers[0]
 
             # Debug
             if input_level == 0:
