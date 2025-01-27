@@ -3,7 +3,6 @@ import os
 import datetime
 import traceback
 import sys
-import time
 
 class Variables():
     gl_log_name = None
@@ -16,6 +15,8 @@ class Variables():
     gl_current_function = None
     gl_current_function_string = 0
     gl_last_message = None
+    gl_log_keep_amount = 1
+    gl_use_date = False
 
 # Setting up global variables
 gl_log_directory = Variables.gl_log_directory
@@ -28,6 +29,8 @@ gl_current_function = Variables.gl_current_function
 gl_function_tracking_style = Variables.gl_function_tracking_style
 gl_current_function_string = Variables.gl_current_function_string
 gl_last_message = Variables.gl_last_message
+gl_log_keep_amount = Variables.gl_log_keep_amount
+gl_use_date = Variables.gl_use_date
 
 # ===========================================================================================
 # Class Name: ZZ_Init
@@ -160,12 +163,44 @@ class ZZ_Init():
             log(4, "COULDN'T SET FUNCTION TRACKING STYLE")
 
     # ===================================================
+    # Function Name: set_log_keep_amount
+    # Description: Sets the number of log files to keep in the specified directory.
+    # Input values: input_log_keep_amount(int)
+    # Output values: N/A
+    # ===================================================
+    def set_log_keep_amount(input_log_keep_amount):
+        log = ZZ_Logging.log
+
+        try:
+            global gl_log_keep_amount
+            gl_log_keep_amount = input_log_keep_amount
+
+        except:
+            log(4, "COULDN'T SET LOG KEEP AMOUNT")
+
+    # ===================================================
+    # Function Name: set_log_keep_amount
+    # Description: Sets the number of log files to keep in the specified directory.
+    # Input values: input_log_keep_amount(int)
+    # Output values: N/A
+    # ===================================================
+    def set_use_date(input_use_date):
+        log = ZZ_Logging.log
+
+        try:
+            global gl_use_date
+            gl_use_date = input_use_date
+
+        except:
+            log(4, "COULDN'T SET LOG KEEP AMOUNT")
+
+    # ===================================================
     # Function Name: configure_logger
     # Description: Runs the basic configuration for the logger
     # Input values: N/A
     # Output values: N/A
     # ===================================================
-    def configure_logger(file_name=None, directory=os.getcwd(), log_format=None, file_mode=None, level=None, function_tracking=False, function_tracking_style="curved"):
+    def configure_logger(file_name=None, directory=os.getcwd(), log_format=None, file_mode=None, level=None, function_tracking=False, function_tracking_style="curved", log_keep_amount=1, use_date=False):
 
         # Run our input parsing functions
         ZZ_Init.set_log_file_name(file_name)
@@ -175,6 +210,8 @@ class ZZ_Init():
         ZZ_Init.set_log_level(level)
         ZZ_Init.set_function_tracking(function_tracking)
         ZZ_Init.set_function_tracking_style(function_tracking_style)
+        ZZ_Init.set_log_keep_amount(log_keep_amount)
+        ZZ_Init.set_use_date(use_date)
 
         # Configure
         try:
@@ -191,14 +228,38 @@ class ZZ_Init():
             else:
                 os.makedirs(config_path)
 
+            # Deal with old logs
+            # If we get a -1, never delete logs
+            if log_keep_amount == -1:
+                pass
+            else:
+                # Get all the log file paths
+                logs = os.listdir(config_path)
+                logs = []
+                for file in logs:
+                    if file.endswith(".log"):
+                        logs.append(os.path.join(config_path, file))
+
+                # Remove the oldest file
+                if len(logs) > log_keep_amount:
+                    oldest_file = min(logs, key=os.path.getctime)
+                    os.remove(oldest_file)
+
             # Check for a custom file name input
             if gl_log_file_name:
-                config_name = f"{gl_log_file_name}.log"
+                config_name = f"{gl_log_file_name}"
             else:
-                now = datetime.datetime.now()
-                config_name = now.strftime(f"%Y-%m-%d.log")
+                config_name = f"default"
 
-            file_name = f"{config_path}/{config_name}"
+            # Check for date bool
+            if gl_use_date:
+                now = datetime.datetime.now()
+                if config_name == "default":
+                    config_name = f"{now.strftime('%Y-%m-%d')}"
+                else:
+                    config_name = f"{config_name} - {now.strftime('%Y-%m-%d')}"
+
+            file_name = f"{config_path}/{config_name}.log"
 
             # Check for a custom internal log format
             if gl_log_format:
